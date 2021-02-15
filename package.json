@@ -5,8 +5,7 @@
   "main": "index.js",
   "module": "module",
   "scripts": {
-    "test": "mocha 'test/**/*.ts'",
-    "test:watch": "mocha 'test/**/*.ts' --watch"
+    "test": "mocha 'test/**/*.ts'"
   },
   "author": "Uncle Mantis",
   "license": "ISC",
