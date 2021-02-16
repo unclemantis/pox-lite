@@ -15,6 +15,4 @@
     { deposit-id: (var-get deposit-id),
       address: address,
       amount: amount,
-      memo: memo})
-  )
-)
+      memo: memo})))
