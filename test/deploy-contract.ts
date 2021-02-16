@@ -2,8 +2,8 @@ const { assert } = require('chai');
 const { Client, Provider, ProviderRegistry, Result } = require('@blockstack/clarity');
 
 describe("deploy contract test suite", () => {
-  var poxLiteClient = Client;
-  var provider = Provider;
+  let poxLiteClient = Client;
+  let provider = Provider;
 
   before(async () => {
     provider = await ProviderRegistry.createProvider();
@@ -24,6 +24,7 @@ describe("deploy contract test suite", () => {
     });
     await tx.sign("ST2ZRX0K27GW0SP3GJCEMHD95TQGJMKB7G9Y0X1MH")
     const receipt = await poxLiteClient.submitTransaction(tx);
+    console.log(receipt);
     assert.isTrue(receipt.success);
   });
 
