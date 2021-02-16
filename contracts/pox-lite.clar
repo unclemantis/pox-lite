@@ -16,3 +16,6 @@
       address: address,
       amount: amount,
       memo: memo})))
+
+(begin
+  (deposit u100 'SP3GWX3NE58KXHESRYE4DYQ1S31PQJTCRXB3PE9SB "none"))

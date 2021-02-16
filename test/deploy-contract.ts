@@ -7,7 +7,7 @@ describe("deploy contract test suite", () => {
 
   before(async () => {
     provider = await ProviderRegistry.createProvider();
-    poxLiteClient = new Client("SP3GWX3NE58KXHESRYE4DYQ1S31PQJTCRXB3PE9SB.pox-lite", "pox-lite", provider);
+    poxLiteClient = new Client("ST2ZRX0K27GW0SP3GJCEMHD95TQGJMKB7G9Y0X1MH.pox-lite", "pox-lite", provider);
   });
 
   it("should have a valid syntax", async () => {
@@ -20,9 +20,9 @@ describe("deploy contract test suite", () => {
 
   it("map should set", async () => {
     const tx = poxLiteClient.createTransaction({
-      method: { name: "deposit", args: ["u100", "'SP3GWX3NE58KXHESRYE4DYQ1S31PQJTCRXB3PE9SB", "none"] }
+      method: { name: "deposit", args: ["u100", "'ST2ZRX0K27GW0SP3GJCEMHD95TQGJMKB7G9Y0X1MH", "none"] }
     });
-    await tx.sign("SP3GWX3NE58KXHESRYE4DYQ1S31PQJTCRXB3PE9SB")
+    await tx.sign("ST2ZRX0K27GW0SP3GJCEMHD95TQGJMKB7G9Y0X1MH")
     const receipt = await poxLiteClient.submitTransaction(tx);
     assert.isTrue(receipt.success);
   });

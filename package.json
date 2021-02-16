@@ -12,6 +12,7 @@
   "dependencies": {
     "@blockstack/clarity": "^0.3.7",
     "@blockstack/clarity-cli": "^0.3.7",
+    "@stacks/transactions": "^1.2.2",
     "@types/chai": "^4.2.15",
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.28",
