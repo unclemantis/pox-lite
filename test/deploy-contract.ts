@@ -2,8 +2,8 @@ const { assert } = require('chai');
 const { Client, Provider, ProviderRegistry } = require('@blockstack/clarity');
 
 describe("deploy contract test suite", () => {
-  let poxLiteClient = new Client;
-  let provider = Provider;
+  var poxLiteClient = Client;
+  var provider = Provider;
 
   before(async () => {
     provider = await ProviderRegistry.createProvider();
