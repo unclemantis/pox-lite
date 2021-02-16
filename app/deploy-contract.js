@@ -14,6 +14,7 @@ const txOptions = {
 };
 async function deployContract() {
     const transaction = await makeContractDeploy(txOptions);
+    
     const txid = await broadcastTransaction(transaction, network);
     console.log(txid);
 }
