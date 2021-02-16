@@ -18,7 +18,7 @@ describe("deploy contract test suite", () => {
     await poxLiteClient.deployContract();
   });
 
-  it("map should set", async () => {
+  it("deposit function should return", async () => {
     const tx = poxLiteClient.createTransaction({
       method: { name: "deposit", args: ["u100", "'ST2ZRX0K27GW0SP3GJCEMHD95TQGJMKB7G9Y0X1MH", "none"] }
     });
