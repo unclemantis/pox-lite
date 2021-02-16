@@ -1,7 +1,6 @@
-const { estimateContractDeploy, makeContractDeploy, broadcastTransaction, PostConditionMode } = require('@stacks/transactions');
+const { makeContractDeploy, broadcastTransaction, PostConditionMode } = require('@stacks/transactions');
 const { StacksTestnet } = require ('@stacks/network');
 import fs = require('fs');
-import BigNum = require('bn.js');
 
 const network = new StacksTestnet();
 
@@ -14,7 +13,7 @@ const txOptions = {
 };
 
 export async function deployContract() {
-  const transaction = await makeContractDeploy(txOptions);
+  var transaction = await makeContractDeploy(txOptions);
   const txid = await broadcastTransaction(transaction, network);
   console.log(txid);
 };
