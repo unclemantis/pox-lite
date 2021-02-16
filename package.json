@@ -11,11 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@blockstack/clarity": "^0.3.7",
-<<<<<<< HEAD
     "@blockstack/clarity-native-bin": "^0.1.16",
     "@types/chai": "^4.2.15",
-=======
->>>>>>> 0a2421734200314b55a42b6c23f8a4bbb1b90e93
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.28",
     "chai": "^4.3.0",
