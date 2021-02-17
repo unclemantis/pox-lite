@@ -5,7 +5,7 @@ import fs = require('fs');
 const network = new StacksTestnet();
 
 const txOptions = {
-  contractName: 'pox-lite',
+  contractName: 'pox-lite-2',
   codeBody: fs.readFileSync('./contracts/pox-lite.clar').toString(),
   senderKey: '4974a88497db2c415e5d7b16c27b229b2e883fbde6f1d2352319d06399ed094801',
   network,
