@@ -18,11 +18,28 @@ describe("deploy contract test suite", () => {
     await poxLiteClient.deployContract();
   });
 
-  it("deposit function should return True", async () => {
-    const tx = poxLiteClient.createQuery({
-      method: { name: "deposit", args: ["u100", "'SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7"] }
+  it("get-deposit-id function should return 0", async () => {
+    const query = poxLiteClient.createQuery({
+      method: { name: "get-deposit-id", args: [] }
     });
-    const receipt = await poxLiteClient.submitQuery(tx);
+    const receipt = await poxLiteClient.submitQuery(query);
+    const result = Result.unwrap(receipt);
+    assert.equal(result, '0');
+  });
+
+  it("increment-deposit-id function should return success", async () => {
+    const query = poxLiteClient.createQuery({
+      method: { name: "increment-deposit-id", args: [] }
+    });
+    const receipt = await poxLiteClient.submitQuery(query);
+    assert.isTrue(receipt.success);
+  });
+
+  it("deposit function should return True", async () => {
+    const query = poxLiteClient.createQuery({
+      method: { name: "deposit", args: ["u100", "'SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7", "\"memo\""] }
+    });
+    const receipt = await poxLiteClient.submitQuery(query);
     assert.isTrue(receipt.success);
   });
 
