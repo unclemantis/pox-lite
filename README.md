@@ -2,3 +2,6 @@
 
 # pox-lite
  Freehold PoX Lite Smart Contract
+
+ npm install --force
+ npm test
