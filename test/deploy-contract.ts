@@ -1,5 +1,6 @@
 const { assert } = require('chai');
 const { Client, Provider, ProviderRegistry, Result } = require('@blockstack/clarity');
+const { fs } = require('fs');
 
 describe("deploy contract test suite", () => {
   let poxLiteClient = Client;
@@ -19,27 +20,27 @@ describe("deploy contract test suite", () => {
   });
 
   it("get-deposit-id function should return 0", async () => {
-    const query = poxLiteClient.createQuery({
+    const tx = poxLiteClient.createTransaction({
       method: { name: "get-deposit-id", args: [] }
     });
-    const receipt = await poxLiteClient.submitQuery(query);
+    const receipt = await poxLiteClient.submitTransaction(tx);
     const result = Result.unwrap(receipt);
     assert.equal(result, '0');
   });
 
   it("increment-deposit-id function should return success", async () => {
-    const query = poxLiteClient.createQuery({
+    const tx = poxLiteClient.createTransaction({
       method: { name: "increment-deposit-id", args: [] }
     });
-    const receipt = await poxLiteClient.submitQuery(query);
+    const receipt = await poxLiteClient.submitTransaction(tx);
     assert.isTrue(receipt.success);
   });
 
   it("deposit function should return True", async () => {
-    const query = poxLiteClient.createQuery({
+    const tx = poxLiteClient.createTransaction({
       method: { name: "deposit", args: ["u100", "'SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7", "\"memo\""] }
     });
-    const receipt = await poxLiteClient.submitQuery(query);
+    const receipt = await poxLiteClient.submitTransaction(tx);
     assert.isTrue(receipt.success);
   });
 

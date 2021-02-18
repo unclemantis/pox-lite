@@ -1,29 +1,30 @@
 {
-  "name": "pox-lite",
-  "version": "1.0.0",
-  "description": "Freehold challenge",
-  "main": "index.js",
-  "module": "module",
-  "scripts": {
-    "test": "mocha 'test/**/*.ts'"
+  "name": "clarity-hello-world",
+  "version": "0.0.0",
+  "author": {
+    "name": "Uncle Mantis",
+    "email": "unclemantis@gmail.com"
   },
-  "author": "Uncle Mantis",
-  "license": "ISC",
+  "repository": "https://github.com/unclemantis/clarity-hello-world.git",
+  "private": true,
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "test": "mocha",
+    "test:watch": "mocha --watch"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^10",
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "ts-node": "^8.2.0",
+    "typescript": "^3.5.2"
+  },
   "dependencies": {
     "@blockstack/clarity": "^0.3.7",
-    "@stacks/network": "^1.2.2",
-    "@stacks/transactions": "^1.2.2",
-    "@types/chai": "^4.2.15",
-    "@types/mocha": "^8.2.0",
-    "@types/node": "^14.14.28",
-    "chai": "^4.3.0",
-    "express": "^4.17.1",
-    "fs": "^0.0.1-security",
-    "mocha": "^8.3.0",
-    "request": "^2.88.2",
-    "save": "^2.4.0",
-    "ts-node": "^9.1.1",
-    "typescript": "^4.1.5",
-    "urix": "^0.1.0"
+    "@blockstack/clarity-native-bin": "^0.3.7"
   }
 }
