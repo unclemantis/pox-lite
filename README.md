@@ -1,8 +1,13 @@
 ![Node.js CI](https://github.com/unclemantis/pox-lite/workflows/Node.js%20CI/badge.svg)
 
-# pox-lite
- Freehold PoX Lite Smart Contract
+# PoX Lite
 
- npm install --force
+A Freehold PoX Lite Smart Contract in Clarity.
+
+## Running the code
+
+```bash
+npm i --force
  
- npm test
+npm test
+```
