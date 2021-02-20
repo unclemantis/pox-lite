@@ -1,19 +1,33 @@
-(define-data-var deposit-id int 0)
+(define-fungible-token boost)
+(define-data-var last-deposit-id int 0)
+(define-data-var last-boost-id int 0)
 
-(define-map deposits { deposit-id: int } { height: uint, address: principal, amount: uint, memo: (string-ascii 80) })
+(define-map deposits { height: uint } { deposit-id: int, address: principal, amount: uint, memo: (string-utf8 80) })
+(define-map boosts { boost-id: int } { height: uint, address: principal, amount: uint })
 
-(define-public (deposit (amount uint) (address principal) (memo (string-ascii 80)))
+(define-public (deposit (amount uint) (address principal) (memo (string-utf8 80)))
   (begin
-    (var-set deposit-id (+ 1 (var-get deposit-id)))
-    (if (map-insert deposits { deposit-id: (var-get deposit-id) } { height: block-height, address: address, amount: amount, memo: memo })
+    (var-set last-deposit-id (+ 1 (var-get last-deposit-id)))
+    (if (map-insert deposits { height: block-height } { deposit-id: (var-get last-deposit-id), address: address, amount: amount, memo: memo })
       (ok true)
       (err u1)
     )
   )
 )
 
-(define-private (get-last-deposit-id)
-  (var-get deposit-id))
+(define-private (mint-boost (height uint) (address principal) (amount uint))
+  (begin
+    (try! (ft-mint? boost amount address))
+    (var-set last-boost-id (+ 1 (var-get last-boost-id)))
+    (if (map-insert boosts { boost-id: (var-get last-boost-id) } { height: height, address: address, amount: amount })
+      (stx-transfer? amount tx-sender address)
+      (err u1)
+    )
+  )
+)
 
-(define-private (get-last-deposit-address)
-  (get address (map-get? deposits { deposit-id: (get-last-deposit-id)})))
+(define-public (get-deposit-amounts-by-height (height uint))
+  (ok (get amount (map-get? deposits { height: height }))))
+
+(define-private (get-last-deposit-id)
+  (var-get last-deposit-id))
