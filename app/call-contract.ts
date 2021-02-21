@@ -15,7 +15,7 @@ const {
     StacksTestnet,
 } = require('@stacks/network');
 
-export async function deposit(Amount: number, Address: string, Memo: string) {
+export async function deposit() {
         const apiConfig = new Configuration({
             fetchApi: fetch,
             basePath: 'https://stacks-node-api.mainnet.stacks.co',
@@ -32,13 +32,10 @@ export async function deposit(Amount: number, Address: string, Memo: string) {
         const amount = uintCV(txs.results[0].amount);
         const height = uintCV(txs.results[0].block_height);
         const network = new StacksTestnet();
-        //const amount = uintCV(Amount);
-        //const address = Address;
-        //const memo = stringUtf8CV(Memo);
         const sender = standardPrincipalCVFromAddress(createAddress(address));
         const txOptions = {
             contractAddress: "ST1HR732F4P5GDVXPTVBEVXVYJC3C9AA9FARW541F",
-            contractName: 'test-4',
+            contractName: 'test-5',
             functionName: 'deposit',
             functionArgs: [amount, sender, memo, height],
             senderKey: '4974a88497db2c415e5d7b16c27b229b2e883fbde6f1d2352319d06399ed094801',
@@ -53,4 +50,4 @@ export async function deposit(Amount: number, Address: string, Memo: string) {
         console.log(txid);
     }
 
-deposit(1000000, "ST1HR732F4P5GDVXPTVBEVXVYJC3C9AA9FARW541F", "This is a another test deposit");
+deposit();
