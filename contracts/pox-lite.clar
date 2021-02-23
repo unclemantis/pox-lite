@@ -15,7 +15,7 @@
 (define-public (deposit (amount uint) (memo (buff 70)))
   (begin
     (match (stx-transfer? amount tx-sender (as-contract tx-sender))
-      deps (if (map-set deposits { height: block-height } (list { address: tx-sender, amount: amount, memo: memo }))
+      deps (if (map-insert deposits { height: block-height } (list { address: tx-sender, amount: amount, memo: memo }))
         (ok true)
         (append-deposit amount memo))
       error (err error))))
