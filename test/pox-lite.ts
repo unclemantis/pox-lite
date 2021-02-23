@@ -20,7 +20,7 @@ describe("deploy contract test suite", () => {
     await poxLiteClient.deployContract();
   });
 
-  it("deposit function should return True", async () => {
+  it("deposit function should return False", async () => {
     const apiConfig = new Configuration({
       fetchApi: fetch,
       basePath: 'https://stacks-node-api.mainnet.stacks.co',
@@ -38,16 +38,7 @@ describe("deploy contract test suite", () => {
     });
     await tx.sign("SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7")
     const receipt = await poxLiteClient.submitTransaction(tx);
-    assert.isTrue(receipt.success);
-  });
-
-  it("get-deposits-by-height function should return True", async () => {
-    const query = poxLiteClient.createQuery({
-      method: { name: "get-deposits-by-height", args: [] }
-    });
-    await query.sign("SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7")
-    const receipt = await poxLiteClient.submitQuery(query);
-    assert.isTrue(receipt.success);
+    assert.isFalse(receipt.success);
   });
 
   after(async () => {

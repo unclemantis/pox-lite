@@ -45,7 +45,7 @@ export async function deposit(n: number) {
         contractAddress: "ST2ZRX0K27GW0SP3GJCEMHD95TQGJMKB7G9Y0X1MH",
         contractName: 'test',
         functionName: 'deposit',
-        functionArgs: [height, sender, amount, memo],
+        functionArgs: [amount, memo],
         nonce: x,
         senderKey: 'b8d99fd45da58038d630d9855d3ca2466e8e0f89d3894c4724f0efc9ff4b51f001',
         validateWithAbi: true,
