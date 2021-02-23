@@ -10,6 +10,7 @@
     "sourceMap": true,
     "strictNullChecks": true,
     "skipLibCheck": true,
+    "resolveJsonModule": true,
     "sourceRoot": "/app"
   }
 }
