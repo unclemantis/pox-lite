@@ -80,4 +80,4 @@ export async function getDepositsByHeight(h: number) {
     console.log(txid);
 }
 
-getDepositsByHeight(4209);
+//getDepositsByHeight(4209);
