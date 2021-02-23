@@ -1,5 +1,3 @@
-import fetch from 'cross-fetch';
-import { Configuration, AccountsApi } from '@stacks/blockchain-api-client';
 import { providerWithInitialAllocations } from "./providerWithInitialAllocations";
 import * as balances from "./balances.json"
 const { assert } = require('chai');
@@ -24,20 +22,8 @@ describe("contract test suite", () => {
   });
 
   it("deposit function should return True", async () => {
-    const apiConfig = new Configuration({
-      fetchApi: fetch,
-      basePath: 'https://stacks-node-api.mainnet.stacks.co',
-    });
-
-    const accountsApi = new AccountsApi(apiConfig);
-
-    const txs = await accountsApi.getAccountInbound({
-      principal: 'SPSB1D7MVRMWY8C521VWM6KY2J1FTNVASRG0DYR4',
-    });
-
-    const memo = txs.results[0].memo;
     const tx = poxLiteClient.createTransaction({
-      method: { name: "deposit", args: ["u100", memo] }
+      method: { name: "deposit", args: ["u100", "0x616e6f746865722074657374206d656d6f0000000000000000000000000000000000"] }
     });
     await tx.sign("SP30JX68J79SMTTN0D2KXQAJBFVYY56BZJEYS3X0B")
     const receipt = await poxLiteClient.submitTransaction(tx);
