@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const cross_fetch_1 = require("cross-fetch");
+const blockchain_api_client_1 = require("@stacks/blockchain-api-client");
 const { assert } = require('chai');
-//const utf8 = require('/utf8');
 const { Client, Provider, ProviderRegistry, Result } = require('@blockstack/clarity');
 describe("deploy contract test suite", () => {
     let poxLiteClient = Client;
@@ -17,21 +18,29 @@ describe("deploy contract test suite", () => {
         await poxLiteClient.deployContract();
     });
     it("deposit function should return True", async () => {
-        const memo = `u"this is a test"`;
+        const apiConfig = new blockchain_api_client_1.Configuration({
+            fetchApi: cross_fetch_1.default,
+            basePath: 'https://stacks-node-api.mainnet.stacks.co',
+        });
+        const accountsApi = new blockchain_api_client_1.AccountsApi(apiConfig);
+        const txs = await accountsApi.getAccountInbound({
+            principal: 'SPSB1D7MVRMWY8C521VWM6KY2J1FTNVASRG0DYR4',
+        });
+        const memo = txs.results[0].memo;
         const tx = poxLiteClient.createTransaction({
-            method: { name: "deposit", args: ["u100", "'SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7", memo] }
+            method: { name: "deposit", args: ["u4209", "'SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7", "u100", memo] }
         });
         await tx.sign("SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7");
         const receipt = await poxLiteClient.submitTransaction(tx);
         assert.isTrue(receipt.success);
     });
-    it("get-last-deposit-id function should return 1", async () => {
-        const tx = poxLiteClient.createQuery({
-            method: { name: "get-last-deposit-id", args: [] }
+    it("get-deposits-by-height function should return True", async () => {
+        const tx = poxLiteClient.createTransaction({
+            method: { name: "get-deposits-by-height", args: ["u4209"] }
         });
-        const receipt = await poxLiteClient.submitQuery(tx);
-        const result = Result.unwrap(receipt);
-        assert.equal(result, '1');
+        await tx.sign("SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7");
+        const receipt = await poxLiteClient.submitTransaction(tx);
+        assert.isTrue(receipt.success);
     });
     after(async () => {
         await provider.close();
