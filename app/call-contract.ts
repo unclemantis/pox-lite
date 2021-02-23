@@ -1,4 +1,4 @@
-import { bufferCV, bufferCVFromString, callReadOnlyFunction, stringUtf8CV, tupleCV } from "@stacks/transactions";
+import { bufferCV, bufferCVFromString, callReadOnlyFunction, cvToString, stringUtf8CV, tupleCV } from "@stacks/transactions";
 import fetch from 'cross-fetch';
 import { Configuration, AccountsApi } from '@stacks/blockchain-api-client';
 import { StacksMocknet } from "@stacks/network";
@@ -60,7 +60,6 @@ export async function deposit(n: number) {
 }
 
 deposit(0);
-deposit(1);
 
 export async function getDepositsByHeight(h: number) {
     const height = uintCV(h)
@@ -77,7 +76,7 @@ export async function getDepositsByHeight(h: number) {
     };
 
     const txid = await callReadOnlyFunction(txOptions);
-    console.log(txid);
+    console.log(cvToString(txid));
 }
 
-//getDepositsByHeight(4209);
+getDepositsByHeight(4209);

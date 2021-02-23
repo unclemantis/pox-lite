@@ -32,7 +32,7 @@ async function deposit(n) {
         contractAddress: "ST2ZRX0K27GW0SP3GJCEMHD95TQGJMKB7G9Y0X1MH",
         contractName: 'test',
         functionName: 'deposit',
-        functionArgs: [height, sender, amount, memo],
+        functionArgs: [amount, memo],
         nonce: x,
         senderKey: 'b8d99fd45da58038d630d9855d3ca2466e8e0f89d3894c4724f0efc9ff4b51f001',
         validateWithAbi: true,
@@ -45,7 +45,6 @@ async function deposit(n) {
 }
 exports.deposit = deposit;
 deposit(0);
-deposit(1);
 async function getDepositsByHeight(h) {
     const height = transactions_2.uintCV(h);
     const x = new BigNum(27);
@@ -60,7 +59,7 @@ async function getDepositsByHeight(h) {
         senderAddress: "ST2ZRX0K27GW0SP3GJCEMHD95TQGJMKB7G9Y0X1MH"
     };
     const txid = await transactions_1.callReadOnlyFunction(txOptions);
-    console.log(txid);
+    console.log(transactions_1.cvToString(txid));
 }
 exports.getDepositsByHeight = getDepositsByHeight;
 getDepositsByHeight(4209);

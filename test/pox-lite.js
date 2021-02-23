@@ -17,7 +17,7 @@ describe("deploy contract test suite", () => {
     it("should deploy", async () => {
         await poxLiteClient.deployContract();
     });
-    it("deposit function should return True", async () => {
+    it("deposit function should return False", async () => {
         const apiConfig = new blockchain_api_client_1.Configuration({
             fetchApi: cross_fetch_1.default,
             basePath: 'https://stacks-node-api.mainnet.stacks.co',
@@ -28,19 +28,11 @@ describe("deploy contract test suite", () => {
         });
         const memo = txs.results[0].memo;
         const tx = poxLiteClient.createTransaction({
-            method: { name: "deposit", args: ["u4209", "'SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7", "u100", memo] }
+            method: { name: "deposit", args: ["u100", memo] }
         });
         await tx.sign("SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7");
         const receipt = await poxLiteClient.submitTransaction(tx);
-        assert.isTrue(receipt.success);
-    });
-    it("get-deposits-by-height function should return True", async () => {
-        const tx = poxLiteClient.createTransaction({
-            method: { name: "get-deposits-by-height", args: ["u4209"] }
-        });
-        await tx.sign("SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7");
-        const receipt = await poxLiteClient.submitTransaction(tx);
-        assert.isTrue(receipt.success);
+        assert.isFalse(receipt.success);
     });
     after(async () => {
         await provider.close();
