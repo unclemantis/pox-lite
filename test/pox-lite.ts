@@ -34,7 +34,7 @@ describe("deploy contract test suite", () => {
 
     const memo = txs.results[0].memo;
     const tx = poxLiteClient.createTransaction({
-      method: { name: "deposit", args: ["u4209", "'SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7", "u100", memo] }
+      method: { name: "deposit", args: ["u100", memo] }
     });
     await tx.sign("SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7")
     const receipt = await poxLiteClient.submitTransaction(tx);
@@ -42,11 +42,11 @@ describe("deploy contract test suite", () => {
   });
 
   it("get-deposits-by-height function should return True", async () => {
-    const tx = poxLiteClient.createTransaction({
-      method: { name: "get-deposits-by-height", args: ["u4209"] }
+    const query = poxLiteClient.createQuery({
+      method: { name: "get-deposits-by-height", args: [] }
     });
-    await tx.sign("SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7")
-    const receipt = await poxLiteClient.submitTransaction(tx);
+    await query.sign("SP2FJ3GKA3KGTDZG27QGSFATKFVXQWQN01Z49W1Q7")
+    const receipt = await poxLiteClient.submitQuery(query);
     assert.isTrue(receipt.success);
   });
 
