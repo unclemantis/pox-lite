@@ -8,9 +8,9 @@
     deposits (if (map-set deposits { height: block-height}
                (unwrap! (as-max-len? (append deposits { address: tx-sender, amount: amount, memo: memo }) 100)
                  (err u2)))
-               (ok true)
+               (ok true))
              (err u3)
-    error (err error))))
+    error (err error)))
 
 (define-public (deposit (amount uint) (memo (buff 70)))
   (begin
