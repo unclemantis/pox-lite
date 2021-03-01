@@ -1,7 +1,11 @@
 (define-fungible-token boost)
 
+(define-data-var last-height uint u0)
+(define-data-var s uint u0)
+(define-data-var m uint u0)
+(define-data-var i uint u0)
+
 (define-map deposits { block-height: uint } (list 100 { address: principal, amount: uint, memo: (buff 70)}))
-(define-map boosts { block-height: uint } { address: principal, amount: uint })
 
 (define-public (append-deposit (amount uint) (memo (buff 70)) (height uint))
   (match (get-deposits-by-height height)
@@ -26,14 +30,39 @@
 
 (define-read-only (get-deposit-address-by-height-and-index (height uint) (index uint))
   (let ((d (unwrap! (get-deposits-by-height height) (err u5))))
-    (ok (get address (element-at d index))))
+    (ok (unwrap! (get address (element-at d index)) (err u6))))
 )
 
-(define-public (randomize (seed uint) (max uint))
-  (ok (mod (+ u94827 (* u983354 seed)) max)))
+(define-read-only (randomize (seed uint) (max uint))
+  (mod (+ u1013904223 (* u1664525 seed)) max))
 
-(define-private (mint-boost (height uint) (address principal) (amount uint))
+(define-public (enter (amount uint) (memo (buff 70)))
   (begin
-    (try! (ft-mint? boost amount address))
-      (map-set boosts { block-height: height } { address: address, amount: amount })
-      (stx-transfer? amount tx-sender address)))
+    (try! (deposit amount memo block-height))
+    (if (> block-height (var-get last-height))
+      (if (> (var-get last-height) u0)
+        (mint-boost)
+        (ok true)
+      )
+      (ok true)
+    )
+  )
+)
+
+(define-public (get-mint-address)
+  (begin
+    (var-set s (var-get last-height))
+    (var-set m (
+      len (
+        unwrap! (
+          get-deposits-by-height (
+            var-get last-height)) (err u7))))
+    (var-set i (randomize (var-get s) (var-get m)))
+    (get-deposit-address-by-height-and-index (var-get last-height) (var-get i))
+  )
+)
+
+(define-private (mint-boost)
+  (ft-mint? boost u1 (unwrap! (get-mint-address) (err u8)))
+)
+

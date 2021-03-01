@@ -1,7 +1,7 @@
 import { providerWithInitialAllocations } from "./providerWithInitialAllocations";
 import * as balances from "./balances.json"
 const { assert } = require('chai');
-const { Client, Provider, ProviderRegistry } = require('@blockstack/clarity');
+const { Client, Provider, ProviderRegistry, Result } = require('@blockstack/clarity');
 
 describe("Contract", () => {
   let poxLiteClient = Client;
@@ -57,9 +57,9 @@ describe("Contract", () => {
     assert.isTrue(receipt.success);
   });
 
-  it("randomize function should return a random number below u30", async () => {
+  it("enter function should return True", async () => {
     const tx = poxLiteClient.createTransaction({
-      method: { name: "randomize", args: ["u9283845968", "u30"] }
+      method: { name: "enter", args: ["u100", "0x616e6f746865722074657374206d656d6f0000000000000000000000000000000000"] }
     });
     await tx.sign("SP30JX68J79SMTTN0D2KXQAJBFVYY56BZJEYS3X0B")
     const receipt = await poxLiteClient.submitTransaction(tx);
