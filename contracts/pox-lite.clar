@@ -2,8 +2,6 @@
 
 (define-data-var last-height uint block-height)
 (define-data-var last-high uint block-height)
-(define-data-var low uint u0)
-(define-data-var high uint u0)
 
 (define-map deposits { block-height: uint } (list 100 { address: principal, amount: uint, low: uint, high: uint, memo: (buff 70)}))
 
@@ -14,7 +12,7 @@
 (define-public (append-deposit (amount uint) (memo (buff 70)))
   (match (get-deposits-by-height block-height)
     deps (if (map-set deposits { block-height: block-height}
-               (unwrap! (as-max-len? (append deps { address: tx-sender, amount: amount, low: (var-get low), high: (+ amount (get-last-low block-height)), memo: memo }) u100)
+               (unwrap! (as-max-len? (append deps { address: tx-sender, amount: amount, low: (+ u1 (get-last-low)), high: (+ amount (get-last-low block-height)), memo: memo }) u100)
                  (err u2)))
                (ok true)
                (err u3))
@@ -67,7 +65,8 @@
 
 (define-private (mint (height uint))
   (begin
-  (mint-boost (fold select-winning-address (get-deposits-by-height height) (context {random-value: (randomize block-height (block-height get-last-high)), result: none})))
+  (mint-boost (fold select-winning-address (get-deposits-by-height height) (context {random-value: (randomize block-height (get-last-high height)), result: none})))
+  (var-set last-height height)
   ))
 
 (define-private (mint-boost (address principal))
