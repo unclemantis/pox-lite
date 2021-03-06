@@ -43,8 +43,8 @@
 (define-read-only (randomize (seed uint) (max uint))
   (mod (+ u1013904223 (* u1664525 seed)) max))
 
-(define-private (select-winning-address (entry { address: principal, amount: uint, low: uint, high: uint, memo: (buff 70)})
-  (context { random-value: uint, result: (optional principal)}))
+(define-private (select-winning-address (entry { address: (optional principal), amount: uint, low: uint, high: uint, memo: (buff 70)})
+  (context {random-value: uint, result: (optional principal)}))
 
 (let ((random-value (get random-value context)) (result (get result context)))
 (if (is-some result) 
