@@ -24,16 +24,14 @@
 
 (define-public (deposit (amount uint) (memo (buff 70)))
   (begin
-    (match (mint (var-get last-height))
-      check-height (if (> block-height (var-get last-height))
-        (ok true)
-        (ok false))
-      error (err error))
+    (if (> block-height (var-get last-height))
+      (mint-boost (var-get last-height))
+      (ok false))
 
     (match (stx-transfer? amount tx-sender (as-contract tx-sender))
       deps (if (map-insert deposits { block-height: block-height } (list { address: tx-sender, amount: amount, low: u1, high: amount, memo: memo }))
         (ok true)
-        (append-deposit amount memo height))
+        (append-deposit amount memo block-height))
       error (err error))))
 
 (define-read-only (get-deposit-address-by-height-and-index (height uint) (index uint))
@@ -53,16 +51,12 @@
   ;; else check if the current deposit wins
   (if (and (> random-value (get low entry)) (< random-value (get high entry)))
       ;; won!!
-      {random-value: random-value, result: (get address entry)}
+      {random-value: random-value, result: (some (get address entry))}
       context)))
 )
 
-(define-private (mint (height uint))
+(define-private (mint-boost (height uint))
   (begin
   (var-set last-height height)
-  (fold select-winning-address (unwrap! (get-deposits-by-height height) (err u09324)) {random-value: (randomize block-height (unwrap! (get-deposit-last-high-by-height height) (err u838))), result: none})
+  (ft-mint? boost u1 (get result (fold select-winning-address (unwrap! (get-deposits-by-height height) (err u09324)) {random-value: (randomize block-height (unwrap! (get-deposit-last-high-by-height height) (err u838))), result: none})))
   ))
-
-(define-private (mint-boost (address principal))
-  (ft-mint? boost u1 address)
-)
