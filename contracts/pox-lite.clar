@@ -6,7 +6,7 @@
 
 (define-read-only (get-deposit-last-high-by-height (height uint))
   (let ((d (unwrap! (map-get? deposits {block-height: height }) (err u100))))
-    (ok (unwrap! (get high (element-at d (- u1 (len d)))) (err u10)))))
+    (ok (unwrap-panic (get high (element-at d (- u1 (len d))))))))
 
 (define-public (append-deposit (amount uint) (memo (buff 70)) (height uint))
   (match (get-deposits-by-height height)
@@ -24,7 +24,7 @@
 (define-public (deposit (amount uint) (memo (buff 70)))
   (begin
     (try! (if (and (> block-height (var-get last-height)) (not (is-eq u0 (var-get last-height))))
-      (mint-boost (var-get last-height))
+      (award-boost (var-get last-height))
       (ok false)))
 
     (match (stx-transfer? amount tx-sender (as-contract tx-sender))
@@ -36,22 +36,25 @@
 (define-read-only (randomize (seed uint) (max uint))
   (mod (+ u1013904223 (* u1664525 seed)) max))
 
-(define-private (select-winning-address (entry { address: principal, amount: uint, low: uint, high: uint, memo: (buff 70)})
+(define-private (get-winning-address (entry { address: principal, amount: uint, low: uint, high: uint, memo: (buff 70)})
   (context { random-value: uint, result: (optional principal)}))
 
-(let ((random-value (get random-value context)) (result (get result context)))
-(if (is-some result) 
-  ;; we have already a winner
-  context
-  ;; else check if the current deposit wins
-  (if (and (> random-value (get low entry)) (< random-value (get high entry)))
-      ;; won!!
-      {random-value: random-value, result: (some (get address entry))}
-      context)))
-)
+  (let ((random-value (get random-value context)) (result (get result context)))
+  (if (is-some result) 
+    context
+    (if (and (> random-value (get low entry)) (< random-value (get high entry)))
+        {random-value: random-value, result: (some (get address entry))}
+        context))))
 
-(define-private (mint-boost (height uint))
+(define-private (award-boost (height uint))
   (begin
   (var-set last-height height)
-  (ft-mint? boost (unwrap! (get-deposit-last-high-by-height height) (err u838)) (unwrap! (get result (fold select-winning-address (unwrap! (get-deposits-by-height height) (err u09324)) {random-value: (randomize block-height (unwrap! (get-deposit-last-high-by-height height) (err u838))), result: none})) (err u847)))
-  ))
+  (ft-mint? boost (unwrap! (get-deposit-last-high-by-height height) (err u838)) (unwrap! (get result (fold get-winning-address (unwrap! (get-deposits-by-height height) (err u09324)) {random-value: (randomize block-height (unwrap! (get-deposit-last-high-by-height height) (err u838))), result: none})) (err u847)))))
+
+(define-public (redeem-boost-stx (amount uint))
+  (begin
+    (if (>= amount (ft-get-balance boost tx-sender))
+      (match (ft-burn? boost amount tx-sender)
+        transfer (stx-transfer? amount (as-contract tx-sender) tx-sender)
+        error (err error))
+      (err u823))))
