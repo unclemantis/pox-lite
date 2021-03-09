@@ -23,7 +23,7 @@
 
 (define-public (deposit (amount uint) (memo (buff 70)))
   (begin
-    (try! (if (and (> block-height (var-get last-height)) (not (is-eq u0 (var-get last-height))))
+    (try! (if (> block-height (var-get last-height))
       (award-boost (var-get last-height))
       (ok false)))
 
@@ -31,7 +31,13 @@
       deps (if (map-insert deposits { block-height: block-height } (list { address: tx-sender, amount: amount, low: u1, high: amount, memo: memo }))
         (ok true)
         (append-deposit amount memo block-height))
-      error (err error))))
+      error (err error))
+    
+;;    (let ((h block-height)
+;;      if( (> h u0)
+;;        (var-set last-height h)
+;;        (ok false))))
+))
 
 (define-read-only (randomize (seed uint) (max uint))
   (mod (+ u1013904223 (* u1664525 seed)) max))
@@ -48,8 +54,10 @@
 
 (define-private (award-boost (height uint))
   (begin
-  (var-set last-height height)
-  (ft-mint? boost (unwrap! (get-deposit-last-high-by-height height) (err u838)) (unwrap! (get result (fold get-winning-address (unwrap! (get-deposits-by-height height) (err u09324)) {random-value: (randomize block-height (unwrap! (get-deposit-last-high-by-height height) (err u838))), result: none})) (err u847)))))
+  (if (> height u0)
+    (ft-mint? boost (unwrap! (get-deposit-last-high-by-height height) (err u838)) (unwrap! (get result (fold get-winning-address (unwrap! (get-deposits-by-height height) (err u09324)) {random-value: (randomize block-height (unwrap! (get-deposit-last-high-by-height height) (err u838))), result: none})) (err u847)))
+    (ok false)
+  )))
 
 (define-public (redeem-boost-stx (amount uint))
   (begin
