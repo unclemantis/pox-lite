@@ -59,24 +59,4 @@ export async function deposit(n: number) {
     console.log(txid);
 }
 
-deposit(0);
-
-export async function getDepositsByHeight(h: number) {
-    const height = uintCV(h)
-    const x = new BigNum(27);
-    const network = new StacksMocknet();
-    const sender = standardPrincipalCVFromAddress(createAddress("ST2ZRX0K27GW0SP3GJCEMHD95TQGJMKB7G9Y0X1MH"));
-    const txOptions = {
-        contractName: 'test',
-        contractAddress: "ST2ZRX0K27GW0SP3GJCEMHD95TQGJMKB7G9Y0X1MH",
-        functionName: 'get-deposits-by-height',
-        functionArgs: [height],
-        network: network,
-        senderAddress: "ST2ZRX0K27GW0SP3GJCEMHD95TQGJMKB7G9Y0X1MH"
-    };
-
-    const txid = await callReadOnlyFunction(txOptions);
-    console.log(cvToString(txid));
-}
-
-getDepositsByHeight(4209);
+deposit();
