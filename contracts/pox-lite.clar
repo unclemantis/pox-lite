@@ -62,6 +62,6 @@
   (begin
     (if (>= amount (ft-get-balance boost tx-sender))
       (match (ft-transfer? boost amount tx-sender address)
-        transfer (stx-transfer? amount (as-contract tx-sender) tx-sender)
+        transfer (stx-transfer? amount tx-sender address)
         error (err error))
       (err u823))))
