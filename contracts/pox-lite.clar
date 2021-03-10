@@ -52,13 +52,11 @@
 (define-private (award-boost (height uint))
   (ft-mint? boost (unwrap! (get-deposit-last-high-by-height height) (ok false)) (unwrap! (get result (fold get-winning-address (unwrap! (get-deposits-by-height height) (err u09324)) {random-value: (randomize block-height (unwrap! (get-deposit-last-high-by-height height) (ok false))), result: none})) (ok false))))
 
-(define-public (redeem-boost-stx (amount uint))
-  (begin
+(define-public (redeem-boost (amount uint))
+  (let ((recipient tx-sender))
     (if (>= amount (ft-get-balance boost tx-sender))
-      (match (ft-burn? boost amount tx-sender)
-        transfer (stx-transfer? amount (as-contract tx-sender) tx-sender)
-        error (err error))
-      (err u823))))
+      (as-contract (stx-transfer? amount tx-sender recipient))
+      (err u4844))))
 
 (define-public (transfer-boost (address principal) (amount uint))
   (begin
