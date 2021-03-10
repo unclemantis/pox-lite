@@ -38,6 +38,16 @@ describe("Contract", () => {
     const receipt = await poxLiteClient.submitTransaction(tx);
     assert.isTrue(receipt.success);
   });
+
+  it("redeem-boost function should return True", async () => {
+    const tx = poxLiteClient.createTransaction({
+      method: { name: "deposit", args: ["u100"] }
+    });
+    await tx.sign("SP30JX68J79SMTTN0D2KXQAJBFVYY56BZJEYS3X0B")
+    const receipt = await poxLiteClient.submitTransaction(tx);
+    console.log(receipt);
+    assert.isTrue(receipt.success);
+  });
     
   after(async () => {
     await provider.close();
