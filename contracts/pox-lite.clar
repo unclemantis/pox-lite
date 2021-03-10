@@ -1,6 +1,6 @@
 (define-fungible-token boost)
 
-(define-data-var last-height uint u0)
+(define-data-var last-height uint block-height)
 
 (define-map deposits { block-height: uint } (list 100 { address: principal, amount: uint, low: uint, high: uint, memo: (buff 70)}))
 
@@ -28,15 +28,12 @@
       (ok false)))
 
     (match (stx-transfer? amount tx-sender (as-contract tx-sender))
-      deps (if (map-insert deposits { block-height: block-height } (list { address: tx-sender, amount: amount, low: u1, high: amount, memo: memo }))
+      deps  (begin
+        (var-set last-height block-height)
+        (if (map-insert deposits { block-height: block-height } (list { address: tx-sender, amount: amount, low: u1, high: amount, memo: memo }))
         (ok true)
-        (append-deposit amount memo block-height))
+        (append-deposit amount memo block-height)))
       error (err error))
-    
-;;    (let ((h block-height)
-;;      if( (> h u0)
-;;        (var-set last-height h)
-;;        (ok false))))
 ))
 
 (define-read-only (randomize (seed uint) (max uint))
@@ -53,16 +50,20 @@
         context))))
 
 (define-private (award-boost (height uint))
-  (begin
-  (if (> height u0)
-    (ft-mint? boost (unwrap! (get-deposit-last-high-by-height height) (err u838)) (unwrap! (get result (fold get-winning-address (unwrap! (get-deposits-by-height height) (err u09324)) {random-value: (randomize block-height (unwrap! (get-deposit-last-high-by-height height) (err u838))), result: none})) (err u847)))
-    (ok false)
-  )))
+  (ft-mint? boost (unwrap! (get-deposit-last-high-by-height height) (ok false)) (unwrap! (get result (fold get-winning-address (unwrap! (get-deposits-by-height height) (err u09324)) {random-value: (randomize block-height (unwrap! (get-deposit-last-high-by-height height) (ok false))), result: none})) (ok false))))
 
 (define-public (redeem-boost-stx (amount uint))
   (begin
     (if (>= amount (ft-get-balance boost tx-sender))
       (match (ft-burn? boost amount tx-sender)
+        transfer (stx-transfer? amount (as-contract tx-sender) tx-sender)
+        error (err error))
+      (err u823))))
+
+(define-public (transfer-boost (address principal) (amount uint))
+  (begin
+    (if (>= amount (ft-get-balance boost tx-sender))
+      (match (ft-transfer? boost amount tx-sender address)
         transfer (stx-transfer? amount (as-contract tx-sender) tx-sender)
         error (err error))
       (err u823))))
