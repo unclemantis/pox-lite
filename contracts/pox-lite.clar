@@ -8,7 +8,7 @@
   (let ((d (unwrap! (map-get? deposits {block-height: height }) (err u1))))
     (ok (unwrap! (get high (element-at d (- u1 (len d)))) (err u2)))))
 
-(define-public (append-deposit (amount uint) (memo (buff 70)) (height uint))
+(define-private (append-deposit (amount uint) (memo (buff 70)) (height uint))
   (match (get-deposits-by-height height)
       deps (if (map-set deposits { block-height: height}
                  (unwrap! (as-max-len? (append deps { address: tx-sender, amount: amount, low: (unwrap! (get-deposit-last-high-by-height height) (err u2)), high: (+ u1 (unwrap! (get-deposit-last-high-by-height height) (err u3))), memo: memo }) u100)
