@@ -49,6 +49,15 @@ describe("Contract", () => {
     assert.isTrue(receipt.success);
   });
 
+  it("redeem-stinger function should return True", async () => {
+    const tx = poxLiteClient.createTransaction({
+      method: { name: "redeem-stinger", args: ["u100"] }
+    });
+    await tx.sign("SP30JX68J79SMTTN0D2KXQAJBFVYY56BZJEYS3X0B")
+    const receipt = await poxLiteClient.submitTransaction(tx);
+    assert.isTrue(receipt.success);
+  });
+
   it("deposit function should return True", async () => {
     const tx = poxLiteClient.createTransaction({
       method: { name: "deposit", args: ["u400", "0x616e6f746865722074657374206d656d6f0000000000000000000000000000000000"] }
