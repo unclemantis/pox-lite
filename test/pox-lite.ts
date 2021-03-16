@@ -27,7 +27,6 @@ describe("Contract", () => {
     });
     await tx.sign("SP30JX68J79SMTTN0D2KXQAJBFVYY56BZJEYS3X0B")
     const receipt = await poxLiteClient.submitTransaction(tx);
-    console.log(receipt);
     assert.isTrue(receipt.success);
   });
 
@@ -37,6 +36,7 @@ describe("Contract", () => {
     });
     await tx.sign("SP30JX68J79SMTTN0D2KXQAJBFVYY56BZJEYS3X0B")
     const receipt = await poxLiteClient.submitTransaction(tx);
+    console.log(receipt);
     assert.isTrue(receipt.success);
   });
 
