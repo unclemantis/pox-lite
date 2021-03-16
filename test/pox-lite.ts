@@ -21,28 +21,9 @@ describe("Contract", () => {
     await poxLiteClient.deployContract();
   });
 
-  it("deposit function should return True", async () => {
+  it("deposit2 function should return True", async () => {
     const tx = poxLiteClient.createTransaction({
-      method: { name: "deposit", args: ["u100", "0x616e6f746865722074657374206d656d6f0000000000000000000000000000000000"] }
-    });
-    await tx.sign("SP30JX68J79SMTTN0D2KXQAJBFVYY56BZJEYS3X0B")
-    const receipt = await poxLiteClient.submitTransaction(tx);
-    assert.isTrue(receipt.success);
-  });
-
-  it("deposit function should return True", async () => {
-    const tx = poxLiteClient.createTransaction({
-      method: { name: "deposit", args: ["u200", "0x616e6f746865722074657374206d656d6f0000000000000000000000000000000000"] }
-    });
-    await tx.sign("SP30JX68J79SMTTN0D2KXQAJBFVYY56BZJEYS3X0B")
-    const receipt = await poxLiteClient.submitTransaction(tx);
-    console.log(receipt);
-    assert.isTrue(receipt.success);
-  });
-
-  it("deposit function should return True", async () => {
-    const tx = poxLiteClient.createTransaction({
-      method: { name: "deposit", args: ["u300", "0x616e6f746865722074657374206d656d6f0000000000000000000000000000000000"] }
+      method: { name: "deposit2", args: ["u200", "0x616e6f746865722074657374206d656d6f0000000000000000000000000000000000"] }
     });
     await tx.sign("SP30JX68J79SMTTN0D2KXQAJBFVYY56BZJEYS3X0B")
     const receipt = await poxLiteClient.submitTransaction(tx);
