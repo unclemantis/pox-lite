@@ -1,4 +1,4 @@
-(define-fungible-token boost)
+(define-fungible-token stinger u1000000000000)
 
 (define-data-var last-height uint u0)
 
@@ -24,22 +24,21 @@
 (define-public (deposit (amount uint) (memo (buff 70)))
   (begin
     (try! (if (> block-height (var-get last-height))
-      (award-boost (var-get last-height))
+      (award-stinger (var-get last-height))
       (ok false)))
 
     (match (stx-transfer? amount tx-sender (as-contract tx-sender))
       deps  (begin
-        (var-set last-height block-height)
-        (if (map-insert deposits { block-height: block-height } (list { address: tx-sender, amount: amount, low: u1, high: amount, memo: memo }))
-        (ok true)
-        (append-deposit amount memo block-height)))
-      error (err u12))
-))
+              (var-set last-height block-height)
+              (if (map-insert deposits { block-height: block-height } (list { address: tx-sender, amount: amount, low: u1, high: amount, memo: memo }))
+                (ok true)
+                (append-deposit amount memo block-height)))
+      error (err u12))))
 
-(define-read-only (randomize (seed uint) (max uint))
+(define-private (randomize (seed uint) (max uint))
   (+ u1 (mod (+ u1013904223 (* u1664525 seed)) max)))
 
-(define-private (get-winning-address (entry { address: principal, amount: uint, low: uint, high: uint, memo: (buff 70)})
+(define-private (get-winning-address (entry { address: principal, amount: uint, low: uint, high: uint, memo: (buff 80)})
   (context { random-value: uint, result: (optional principal)}))
 
   (let ((random-value (get random-value context)) (result (get result context)))
@@ -49,24 +48,27 @@
         {random-value: random-value, result: (some (get address entry))}
         context))))
 
-(define-private (award-boost (height uint))
-    (if (> (var-get last-height) u0)
-      (let ((d (unwrap! (get-deposit-last-high-by-height height) (err u12))))
-        (ft-mint? boost d (unwrap! (get result (fold get-winning-address (unwrap! (get-deposits-by-height height) (err u8)) {random-value: (randomize block-height d), result: none})) (err u14))))
-        (ok false)
-     )
-  )
+(define-private (award-stinger (height uint))
+    (if (> height u0)
+      (let ((h (unwrap! (get-deposit-last-high-by-height height) (err u12))))
+        (let ((d (unwrap! (get-deposits-by-height height) (err u8))))
+          (if (> (len d) u0)
+            (let ((a (unwrap! (get result (fold get-winning-address d {random-value: (randomize block-height h), result: none})) (err u14))))
+              (ft-mint? stinger h a))
+            (err u843))))
+      (ok false)))
 
-(define-public (redeem-boost (amount uint))
+(define-public (redeem-stinger (amount uint))
   (let ((recipient tx-sender))
-    (if (>= amount (ft-get-balance boost tx-sender))
-      (as-contract (stx-transfer? amount tx-sender recipient))
-      (err u9))))
+    (let ((b (ft-get-balance stinger tx-sender)))
+      (if (>= b amount)
+        (as-contract (stx-transfer? amount tx-sender recipient))
+        (err u9)))))
 
-(define-public (transfer-boost (address principal) (amount uint))
+(define-public (transfer-stinger (address principal) (amount uint))
   (begin
-    (if (>= amount (ft-get-balance boost tx-sender))
-      (match (ft-transfer? boost amount tx-sender address)
-        transfer (stx-transfer? amount tx-sender address)
+    (if (>= amount (ft-get-balance stinger tx-sender))
+      (match (ft-transfer? stinger amount tx-sender address)
+        transfer (ok true)
         error (err u10))
       (err u11))))
