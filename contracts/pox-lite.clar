@@ -6,7 +6,7 @@
 
 (define-read-only (get-deposit-last-high-by-height (height uint))
   (let ((d (unwrap! (map-get? deposits {block-height: height }) (err u1))))
-    (ok (unwrap! (get high (element-at d (- u1 (len d)))) (err u2)))))
+    (ok (unwrap! (get high (element-at d (- (len d) u1))) (err u2)))))
 
 (define-private (append-deposit (amount uint) (memo (buff 70)) (height uint))
   (match (get-deposits-by-height height)
@@ -60,15 +60,11 @@
 
 (define-public (redeem-stinger (amount uint))
   (let ((recipient tx-sender))
-    (let ((b (ft-get-balance stinger tx-sender)))
+    (let ((b (ft-get-balance stinger recipient)))
       (if (>= b amount)
-        (as-contract (stx-transfer? amount tx-sender recipient))
-        (err u9)))))
-
-(define-public (transfer-stinger (address principal) (amount uint))
-  (begin
-    (if (>= amount (ft-get-balance stinger tx-sender))
-      (match (ft-transfer? stinger amount tx-sender address)
-        transfer (ok true)
-        error (err u10))
-      (err u11))))
+          (begin
+            (try! (as-contract (ft-transfer? stinger amount recipient tx-sender)))
+            (try! (as-contract (stx-transfer? amount tx-sender recipient)))
+            (ok true)
+          )
+          (err u9)))))
