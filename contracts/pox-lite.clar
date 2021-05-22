@@ -1,4 +1,4 @@
-(define-fungible-token stinger u1000000000000)
+(define-fungible-token stinger)
 
 (define-data-var last-height uint u0)
 
@@ -11,7 +11,7 @@
 (define-private (append-deposit (amount uint) (memo (buff 70)) (height uint))
   (match (get-deposits-by-height height)
       deps (if (map-set deposits { block-height: height}
-                 (unwrap! (as-max-len? (append deps { address: tx-sender, amount: amount, low: (unwrap! (get-deposit-last-high-by-height height) (err u2)), high: (+ u1 (unwrap! (get-deposit-last-high-by-height height) (err u3))), memo: memo }) u100)
+                 (unwrap! (as-max-len? (append deps { address: tx-sender, amount: amount, low: (unwrap! (get-deposit-last-high-by-height height) (err u2)), high: (+ amount (unwrap! (get-deposit-last-high-by-height height) (err u3))), memo: memo }) u100)
                    (err u4)))
                  (ok true)
                  (err u5))
